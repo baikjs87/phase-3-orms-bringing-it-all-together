@@ -91,5 +91,16 @@ class Dog
             self.create(name: name, breed: breed)
         end
     end
-end
 
+    def update
+        sql = <<-SQL
+            UPDATE dogs
+            SET name = ?
+            WHERE id = ?
+        SQL
+
+        DB[:conn].execute(sql, self.name, self.id).map do |row|
+            self.new_from_db(row)
+        end
+    end
+end
