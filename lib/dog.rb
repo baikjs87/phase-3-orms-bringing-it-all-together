@@ -28,16 +28,20 @@ class Dog
     end
 
     def save
-        sql = <<-SQL
-            INSERT INTO dogs (name, breed)
-            VALUES (?, ?)
-        SQL
+        if self.id == nil
+            sql = <<-SQL
+                INSERT INTO dogs (name, breed)
+                VALUES (?, ?)
+            SQL
 
-        DB[:conn].execute(sql, self.name, self.breed)
+            DB[:conn].execute(sql, self.name, self.breed)
 
-        self.id = DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][0]
+            self.id = DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][0]
 
-        self
+            self
+        else
+            self.update
+        end
     end
 
     def self.create(name:, breed:)
